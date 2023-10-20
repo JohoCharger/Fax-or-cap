@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fax or Cap?</title>
+    <link rel="stylesheet" href="/signin/signin.css" type="text/css">
+    <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/bootstrap-icons/bootstrap-icons.min.css">
+    <script src="http://accounts.google.com/gsi/client" async></script>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' http://accounts.google.com/gsi/client">
+</head>
+<body>
+    <div class="card bg-dark rounded-3 ">
+        <h3 class="card-header text-white border-white text-center">
+            Sign in to Fax or cap
+        </h3>
+        <div class="card-body">
+            <h5 class="card-text text-white text-center mb-4">
+                Sign in with Google
+            </h5>
+            <div class="w-50 container justify-content-center">
+                <div id="g_id_onload"
+                     data-client_id="897653720428-4f1q0d594b9gnu46jlkioi6fcnoqu88m.apps.googleusercontent.com"
+                     data-context="signin"
+                     data-ux_mode="redirect"
+                     data-login_uri="http://localhost:3000/auth/google"
+                     data-auto_prompt="false">
+                </div>
+
+                <div class="g_id_signin"
+
+                     data-type="standard"
+                     data-shape="rectangular"
+                     data-theme="outline"
+                     data-text="signin_with"
+                     data-size="medium"
+                     data-logo_alignment="left">
+                </div>
+            </div>
+            <div class="container text-center mt-3">
+                <input type="checkbox" name="stay-signed" id="stay-signed">
+                <label class="text-white" for="stay-signed">Stay signed in?</label>
+            </div>
+        </div>
+    </div>
+
+    <script src="/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

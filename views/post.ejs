@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css">
+</head>
+<body>
+	<div class="container-fluid">
+		<form method="POST" action="/new_post/submit" >
+			<div class="row">
+				<div class="col">
+					<p>Enter name:</p>
+				</div>
+				<div class="col">
+					<input name="name" type= "text" id="name">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<p>Enter content:</p>
+				</div>
+				<div class="col">
+					<input name="content" type="text" id="content">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<button type="submit">Submit</button>
+				</div>
+			</div>
+		</form>
+	<script src="/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

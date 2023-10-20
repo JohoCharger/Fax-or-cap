@@ -1,0 +1,30 @@
+{
+  "name": "faxorcap",
+  "version": "1.0.0",
+  "description": "fax or cap?",
+  "main": "server.js",
+  "scripts": {
+    "run": "nodemon --ignore static/ server.js"
+  },
+  "author": "Joonas",
+  "license": "ISC",
+  "dev-dependencies": {},
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "bootstrap": "^5.3.2",
+    "bootstrap-icons": "^1.11.1",
+    "cookie-session": "^2.0.0",
+    "dotenv": "^16.3.1",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "google-auth-library": "^9.1.0",
+    "helmet": "^7.0.0",
+    "http": "0.0.1-security",
+    "jwt-decode": "^3.1.2",
+    "mysql2": "^3.6.2",
+    "nodemon": "^3.0.1",
+    "path": "^0.12.7",
+    "socket.io": "^4.7.2",
+    "uuid": "^9.0.1"
+  }
+}
