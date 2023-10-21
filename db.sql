@@ -1,8 +1,8 @@
 CREATE TABLE posts
 (
     post_id INTEGER PRIMARY KEY AUTO_INCREMENT,
-    account_id VARCHAR(255) UNIQUE NOT NULL,
-    content VARCHAR(255) UNIQUE NOT NULL,
+    account_id VARCHAR(255) NOT NULL,
+    content VARCHAR(255) NOT NULL,
     created_at DATETIME DEFAULT NOW(),
     FOREIGN KEY (account_id) REFERENCES accounts(google_id)
 )
@@ -31,6 +31,8 @@ DROP TABLE posts;
 
 --created_at column
 ALTER TABLE posts ADD created_at DATETIME DEFAULT NOW();
+
+ALTER TABLE posts DROP INDEX account_id;
 
 --sessions STUFF
 USE faxorcap;
@@ -70,3 +72,27 @@ DELETE FROM accounts;
 
 SELECT username, img_link FROM sessions INNER JOIN accounts
 ON sessions.account_id = accounts.google_id;
+
+--votes stuff
+CREATE TABLE votes
+(
+    vote_id INT PRIMARY KEY AUTO_INCREMENT,
+    post_id INT NOT NULL,
+    account_id VARCHAR(255) NOT NULL,
+    type BIT(1) NOT NULL,
+    FOREIGN KEY (post_id) REFERENCES posts(post_id),
+    FOREIGN KEY (account_id) REFERENCES accounts(google_id)
+)
+
+SELECT * FROM votes;
+
+DELETE FROM votes;
+
+DROP TABLE votes;
+
+ALTER TABLE votes RENAME COLUMN type TO vote_type;
+
+SELECT *
+FROM posts LEFT JOIN
+(SELECT vote_type, account_id, post_id FROM votes WHERE account_id='111451191372340224263') as votes_1
+ON posts.account_id=votes_1.account_id AND posts.post_id=votes_1.post_id LIMIT 10;

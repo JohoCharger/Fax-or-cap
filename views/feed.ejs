@@ -32,7 +32,7 @@
                             <% if (profile) { %>
                                 <span id="signed-in"></span>
                                 <a class="nav-link text-white" href="/profile">
-                                    <img id="profile-picture" src="<%= profile.img_link %>" alt="profile-picture">
+                                    <img class="profile-picture" src="<%= profile.img_link %>" alt="profile-picture">
                                     Profile
                                 </a>
                             <% } else { %>
@@ -60,7 +60,7 @@
                 </h6>
                 <div class="container-fluid">
                     <div class="float-md-start m-md-3 m-2">
-                        <img id="profile-picture" src="<%= profile.img_link %>" alt="profile-picture">
+                        <img class="profile-picture" src="<%= profile.img_link %>" alt="profile-picture">
                         <p class="author text-light d-inline fs-5"><%= profile.username %></p>
                     </div>
                     <div class="m-md-3 m-2">
@@ -93,11 +93,20 @@
                 <div class="card bg-dark rounded-4 m-3">
                     <div class="card-body">
                         <h5 class="card-title text-light fs-3">
-                            <i class="bi bi-person-circle me-2"></i>
-                            <span class="author"><%= post.author %></span>
+                            <!--<i class="bi bi-person-circle me-2"></i>-->
+                            <img class="profile-picture" src="<%= post.img_link %>" alt="profile-picture">
+                            <span class="author"><%= post.username %></span>
                             <span class="card-text text-secondary fs-5 time">· <%= post.time_since %> ago ·</span>
-                            <span class="fax-button btn btn-dark text-light py-1 px-3 fs-5">FAX</span>
-                            <span class="cap-button btn btn-dark text-light py-1 px-3 fs-5">CAP</span>
+                            <% if (post.vote_type === 1) { %>
+                                <span class="fax-button active btn btn-dark text-light py-1px-3 fs-5">FAX</span>
+                            <% } else { %>
+                                <span class="fax-button btn btn-dark text-light py-1px-3 fs-5">FAX</span>
+                            <% } if (post.vote_type === 0) { %>
+                                <span class="cap-button active btn btn-dark text-light py-1 px-3 fs-5">CAP</span>
+                            <% } else { %>
+                                <span class="cap-button btn btn-dark text-light py-1 px-3 fs-5">CAP</span>
+                            <% } %>
+                            <span class="post-id d-none"><%= post.post_id %></span>
                         </h5>
                         <div class="card-text text-light fs-4">
                             <span class="content"><%= post.content %></span>
@@ -116,11 +125,12 @@
         <div class="card bg-dark rounded-4 m-3">
             <div class="card-body">
                 <h5 class="card-title text-light fs-3">
-                    <i class="bi bi-person-circle me-2"></i>
+                    <img class="profile-picture" alt="profile-picture">
                     <span class="author"></span>
                     <span class="time card-text text-secondary fs-5">· {time} ago ·</span>
                     <span class="fax-button btn btn-dark text-light py-1 px-3 fs-5">FAX</span>
                     <span class="cap-button btn btn-dark text-light py-1 px-3 fs-5">CAP</span>
+                    <span class="post-id d-none"></span>
                 </h5>
                 <div class="card-text text-light fs-4">
                     <span class="content"></span>

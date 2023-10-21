@@ -25,12 +25,18 @@ function requestNewPosts(amount) {
 
 function displayNewPost(post) {
     let newPostElement = createElementFromHTML(postTemplate);
-    newPostElement.querySelector(".author").textContent = post.author;
+    newPostElement.querySelector(".author").textContent = post.username;
     newPostElement.querySelector(".content").textContent = post.content;
+    newPostElement.querySelector(".post-id").textContent = post.post_id;
+    newPostElement.querySelector(".profile-picture").src = post.img_link;
     const timeString = newPostElement.querySelector(".time").textContent.replace('{time}', post.time_since);
     newPostElement.querySelector(".time").textContent = timeString;
     newPostElement.querySelector(".fax-button").onclick = faxButtonPressed;
     newPostElement.querySelector(".cap-button").onclick = capButtonPressed;
+
+    if (post.vote_type === 1) newPostElement.querySelector(".fax-button").classList.add("active");
+    if (post.vote_type === 0) newPostElement.querySelector(".cap-button").classList.add("active");
+
     cardList.appendChild(newPostElement)
 }
 
@@ -55,17 +61,32 @@ function loadNewPosts(e) {
 }
 
 function faxButtonPressed(event) {
+    if (!signedIn) return;
     let target = event.target;
-    let correspondingCapButton = target.parentNode.lastElementChild;
+    let correspondingCapButton = target.parentNode.querySelector('.cap-button');
     target.classList.add(("active"));
     correspondingCapButton.classList.remove("active");
+
+    const post_id = target.parentNode.querySelector('.post-id').textContent;
+    sendVote({ post_id, vote_type: 1 });
 }
 
 function capButtonPressed(event) {
+    if (!signedIn) return;
     let target = event.target;
-    let correspondingFaxButton = target.parentNode.children[target.parentNode.childElementCount-2];
+    let correspondingFaxButton = target.parentNode.querySelector('.fax-button');
     correspondingFaxButton.classList.remove("active");
     target.classList.add(("active"));
+
+    const post_id = target.parentNode.querySelector('.post-id').textContent;
+    sendVote({ post_id, vote_type: 0 });
+}
+
+function sendVote(vote) {
+    const http = new XMLHttpRequest();
+    http.open('POST', 'http://localhost:3000/vote/add');
+    http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    http.send(JSON.stringify(vote));
 }
 
 function toggleNewPostForm() {
@@ -104,7 +125,7 @@ window.onload = () => {
 
     let capButtons = document.querySelectorAll(".cap-button");
     capButtons.forEach(capButton => {
-       capButton.onclick = capButtonPressed;
+        capButton.onclick = capButtonPressed;
     });
 
     newPostSubmitButton.onclick = submitNewPost;

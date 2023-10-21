@@ -1,4 +1,5 @@
 const mysql = require('mysql2');
+
 require('dotenv').config();
 
 class Database {
@@ -7,11 +8,13 @@ class Database {
     }
 
     connect() {
-        this.connection = mysql.createConnection({
+        this.connection = mysql.createPool({
             host: '127.0.0.1',
             user: process.env.DATABASE_USER,
             password: process.env.DATABASE_PASSWORD,
-            database: 'faxorcap'
+            database: 'faxorcap',
+            connectionLimit: 10,
+            maxIdle: 10,
         }).promise();
 
         console.log("Connection to database established");
@@ -39,6 +42,20 @@ class Database {
         return result[0];
     }
 
+    async getPostsAndVotesByAccount(account_id, amount) {
+        const result = await this.connection.query(
+            "SELECT posts.post_id, posts.account_id, content, created_at, vote_type, accounts.img_link," +
+            " accounts.username" +
+            " FROM posts LEFT JOIN " +
+            "(SELECT vote_type, account_id, post_id FROM votes WHERE account_id=?) as votes_1 " +
+            "ON posts.account_id=votes_1.account_id AND posts.post_id=votes_1.post_id " +
+            "LEFT JOIN accounts on accounts.google_id = posts.account_id " +
+            "LIMIT ?",
+            [account_id, amount]
+        )
+        return result[0];
+    }
+
     async createNewSession(session_id, account_id) {
         await this.connection.execute(
             "INSERT INTO sessions(session_id, account_id) VALUES(?, ?)",
@@ -51,8 +68,7 @@ class Database {
             "SELECT * FROM sessions WHERE session_id=?",
             [session_id]
         );
-        if (results) return results[0][0];
-        return 0;
+        return results[0][0];
     }
 
     async getSessionByAccountId(account_id) {
@@ -100,6 +116,33 @@ class Database {
             [google_id]
         );
         return results[0][0];
+    }
+
+    async addVote(vote) {
+        let previousVote = await this.connection.query(
+            "SELECT vote_id FROM votes WHERE post_id=? AND account_id=?",
+            [vote.post_id, vote.account_id]
+        );
+
+        if (previousVote[0][0]) {
+            //Previous vote exists, update vote
+            await this.connection.execute(
+                "UPDATE votes SET vote_type = ? WHERE vote_id = ?",
+                [vote.vote_type, previousVote[0][0].vote_id]
+            );
+        } else {
+            await this.connection.execute(
+                "INSERT INTO votes(post_id, account_id, vote_type) VALUES (?, ?, ?)",
+                [vote.post_id, vote.account_id, vote.vote_type]
+            );
+        }
+    }
+
+    async getAccountPosts(requester_account_id, requested_account_id, amoumt) {
+        const results = await this.connection.query(
+            "SELECT"
+        )
+
     }
 }
 

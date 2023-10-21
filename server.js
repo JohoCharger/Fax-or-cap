@@ -8,11 +8,9 @@ const uuid = require('uuid');
 const routes = require("./routes/index");
 
 const Database = require("./database");
-const SessionManager = require("./sessionManager");
 
 const app = express();
 const database = new Database();
-const sessionManager = new SessionManager();
 const port = process.env.PORT || 3000;
 
 app.use(helmet({
@@ -38,7 +36,7 @@ app.set("views", path.join(__dirname, "./views"))
 app.set("view engine", "ejs");
 app.set("trust proxy", 1);
 
-app.use(routes({ database, sessionManager }));
+app.use(routes({ database }));
 
 app.use(express.static('static/'));
 app.use("/bootstrap", express.static("node_modules/bootstrap/"));
