@@ -3,3 +3,28 @@
     height: 32px;
     clip-path: circle();
 }
+textarea {
+    resize: none;
+}
+
+#new-post-form {
+    display: none;
+}
+
+#sign-in-first {
+    display: none;
+}
+
+#nothing-here {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    z-index: 5;
+}

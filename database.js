@@ -17,6 +17,14 @@ class Database {
         console.log("Connection to database established");
     }
 
+    async createNewPost(post) {
+        await this.connection.query(
+            "INSERT INTO posts(account_id, content) " +
+            "VALUES (?, ?)",
+            [post.account_id, post.content]
+        );
+    }
+
     async getAllPosts() {
         const result = await this.connection.query(
             "SELECT * FROM posts"
@@ -29,13 +37,6 @@ class Database {
             "SELECT * FROM posts LIMIT ?"
         ,[amount]);
         return result[0];
-    }
-
-    async createPost(post){
-        await this.connection.execute(
-            "INSERT INTO posts(name, content) VALUES(?, ?)",
-            [post.name, post.content]
-        );
     }
 
     async createNewSession(session_id, account_id) {
@@ -88,6 +89,14 @@ class Database {
     async getAccountByGoogleId(google_id) {
         const results = await this.connection.query(
             "SELECT * FROM accounts WHERE google_id = ?",
+            [google_id]
+        );
+        return results[0][0];
+    }
+
+    async getAccountUsername(google_id) {
+        const results = await this.connection.query(
+            "SELECT username FROM accounts WHERE google_id = ?",
             [google_id]
         );
         return results[0][0];

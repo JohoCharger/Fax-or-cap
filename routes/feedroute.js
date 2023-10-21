@@ -20,6 +20,8 @@ module.exports = (params) => {
             const session = await database.getSessionBySessionId(request.session.id);
             if (session) {
                 profile = await database.getAccountByGoogleId(session.account_id);
+            } else {
+                request.session.id = null;
             }
         }
         return response.render("feed", { posts, profile });

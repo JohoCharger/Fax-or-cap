@@ -1,5 +1,11 @@
 const postTemplate = document.getElementById("post-template").innerHTML;
 const cardList = document.getElementById("card-list");
+const newPostForm = document.getElementById("new-post-form");
+const newPostButton = document.getElementById("new-post-button");
+const newPostSubmitButton = document.getElementById("submit-post");
+const inputTextarea = document.getElementById("input-textarea");
+const signInFirst = document.getElementById("sign-in-first");
+const signedIn = document.getElementById("signed-in");
 
 function requestNewPosts(amount) {
     const Http = new XMLHttpRequest()
@@ -10,6 +16,7 @@ function requestNewPosts(amount) {
     Http.onreadystatechange = (event) => {
         if (Http.readyState !== 4) return;
         let posts = JSON.parse(Http.responseText);
+        if (posts === []) return;
         posts.forEach(post => {
             displayNewPost(post);
         })
@@ -34,6 +41,7 @@ function createElementFromHTML(htmlString) {
 }
 
 function getScrollBottom() {
+    if (cardList.childElementCount === 0) return;
     const lastCard = cardList.lastElementChild;
     const boundingBox = lastCard.getBoundingClientRect();
     return boundingBox.bottom;
@@ -60,6 +68,30 @@ function capButtonPressed(event) {
     target.classList.add(("active"));
 }
 
+function toggleNewPostForm() {
+    if (signedIn) {
+        if (newPostForm.style.display === 'block') newPostForm.style.display = 'none';
+        else newPostForm.style.display = 'block';
+    } else {
+        if (signInFirst.style.display === 'block') signInFirst.style.display = 'none';
+        else signInFirst.style.display = 'block';
+    }
+}
+
+function submitNewPost() {
+    const http = new XMLHttpRequest();
+    http.open("POST", 'http://localhost:3000/new_post/submit');
+    http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    http.send(JSON.stringify({
+        content: inputTextarea.value,
+    }));
+
+    http.onreadystatechange = (event) => {
+        if (http.readyState !== 4) return;
+        window.location = '/feed';
+    }
+}
+
 window.setInterval(loadNewPosts, 200);
 
 window.onload = () => {
@@ -74,4 +106,7 @@ window.onload = () => {
     capButtons.forEach(capButton => {
        capButton.onclick = capButtonPressed;
     });
+
+    newPostSubmitButton.onclick = submitNewPost;
+    newPostButton.onclick = toggleNewPostForm;
 }

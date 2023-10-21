@@ -1,3 +1,12 @@
+CREATE TABLE posts
+(
+    post_id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    account_id VARCHAR(255) UNIQUE NOT NULL,
+    content VARCHAR(255) UNIQUE NOT NULL,
+    created_at DATETIME DEFAULT NOW(),
+    FOREIGN KEY (account_id) REFERENCES accounts(google_id)
+)
+
 --insert sample values to posts table
 INSERT INTO posts(name, content)
 VALUES('Joonas', 'Cereal before milk'),
@@ -17,6 +26,8 @@ SELECT * FROM posts;
 
 --delete all posts
 DELETE FROM posts;
+
+DROP TABLE posts;
 
 --created_at column
 ALTER TABLE posts ADD created_at DATETIME DEFAULT NOW();
