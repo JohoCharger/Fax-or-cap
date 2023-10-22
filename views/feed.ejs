@@ -31,7 +31,7 @@
                         <li class="nav-item">
                             <% if (profile) { %>
                                 <span id="signed-in"></span>
-                                <a class="nav-link text-white" href="/profile">
+                                <a class="nav-link text-white" href="/profile/<%=profile.username%>">
                                     <img class="profile-picture" src="<%= profile.img_link %>" alt="profile-picture">
                                     Profile
                                 </a>

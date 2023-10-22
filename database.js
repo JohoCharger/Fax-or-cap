@@ -37,7 +37,9 @@ class Database {
 
     async getPosts(amount) {
         const result = await this.connection.query(
-            "SELECT * FROM posts LIMIT ?"
+            "SELECT posts.account_id, content, created_at, accounts.username, accounts.img_link " +
+            "FROM posts LEFT JOIN accounts ON posts.account_id = accounts.google_id " +
+            "LIMIT ?"
         ,[amount]);
         return result[0];
     }
@@ -118,6 +120,14 @@ class Database {
         return results[0][0];
     }
 
+    async getAccountByUsername(username) {
+        const results = await this.connection.query(
+            "SELECT * FROM accounts WHERE username = ?",
+            [username]
+        );
+        return results[0][0];
+    }
+
     async addVote(vote) {
         let previousVote = await this.connection.query(
             "SELECT vote_id FROM votes WHERE post_id=? AND account_id=?",
@@ -138,11 +148,30 @@ class Database {
         }
     }
 
-    async getAccountPosts(requester_account_id, requested_account_id, amoumt) {
-        const results = await this.connection.query(
-            "SELECT"
+    async getAccountAndVotesPosts(requester_account_id, requested_account_id, amount) {
+        const result = await this.connection.query(
+            "SELECT posts_1.post_id, posts_1.account_id, content, created_at, vote_type, accounts.img_link," +
+            " accounts.username" +
+            " FROM (SELECT * FROM posts WHERE account_id=?) as posts_1 LEFT JOIN " +
+            "(SELECT vote_type, account_id, post_id FROM votes WHERE account_id=?) as votes_1 " +
+            "ON posts_1.account_id=votes_1.account_id AND posts_1.post_id=votes_1.post_id " +
+            "LEFT JOIN accounts on accounts.google_id = posts_1.account_id " +
+            "LIMIT ?",
+            [requested_account_id, requester_account_id, amount]
         )
+        return result[0];
+    }
 
+    async getAccountPosts(account_id, amount) {
+        const result = await this.connection.query(
+            "SELECT posts.post_id, posts.account_id, content, created_at, accounts.img_link," +
+            " accounts.username" +
+            " FROM (SELECT * FROM posts WHERE account_id=?) as posts LEFT JOIN accounts ON " +
+            "posts.account_id = accounts.google_id " +
+            "LIMIT ?",
+            [account_id, amount]
+        )
+        return result[0];
     }
 }
 

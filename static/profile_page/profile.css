@@ -1,0 +1,48 @@
+.profile-picture {
+     width: 32px;
+     height: 32px;
+     clip-path: circle();
+ }
+
+.profile-picture-lg {
+    width: 96px;
+    height:96px;
+    clip-path: circle();
+}
+
+textarea {
+    resize: none;
+}
+
+#new-post-form {
+    display: none;
+}
+
+#sign-in-first {
+    display: none;
+}
+
+#nothing-here {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    z-index: 5;
+}
+
+.brand{
+    text-decoration: none;
+}
+
+@media (min-width: 1200px) {
+    #card-list {
+        overflow-y: scroll;
+        height: 50em;
+    }
+}

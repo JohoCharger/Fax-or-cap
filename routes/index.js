@@ -3,6 +3,8 @@ const FeedRouter = require('./feedroute');
 const NewPostRouter = require('./newpostroute');
 const AuthRouter = require('./authroute');
 const VoteRouter = require('./voteroute');
+const ProfileRouter = require('./profileroute');
+
 const {PluggableAuthHandler} = require("google-auth-library/build/src/auth/pluggable-auth-handler");
 
 const router = express.Router();
@@ -23,6 +25,7 @@ module.exports = (params) => {
     router.use('/auth', AuthRouter({database}));
     router.use('/new_post', NewPostRouter({database}));
     router.use('/vote', VoteRouter({database}));
+    router.use('/profile', ProfileRouter({database}));
 
     return router;
 }

@@ -1,4 +1,4 @@
-function GetTimeString(time) {
+function GetTimeString2(time) {
     const timeSplit = time.split('');
     if (timeSplit.length <= 5) {
         return "1min";
@@ -19,6 +19,17 @@ function GetTimeString(time) {
     } else {
         return timeSplit[0] + "yr"; //Years
     }
+}
+
+function GetTimeString(time) {
+    time /= 60000;
+    if (time < 1) return '1min';
+    if (time < 60) return String(Math.floor(time)) + 'min';
+    time /= 60;
+    if (time < 24) return String(Math.floor(time)) + 'hr';
+    time /= 24;
+    if (time < 365) return String(Math.floor(time)) + 'd';
+    return String(Math.floor(time / 365)) + 'yr';
 }
 
 module.exports = { GetTimeString };

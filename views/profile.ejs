@@ -3,25 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <title>Fax or Cap?</title>
-    <link rel="stylesheet" href="/signin/signin.css" type="text/css">
+    <link rel="stylesheet" href="/profile_page/profile.css" type="text/css">
     <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/bootstrap-icons/bootstrap-icons.min.css">
     <script src="http://accounts.google.com/gsi/client" async></script>
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' http://accounts.google.com/gsi/client">
 </head>
 <body>
-    <div class="card bg-dark rounded-3 ">
-        <h3 class="card-header text-white border-white text-center">
-            Sign out of Fax or cap
-        </h3>
-        <div class="card-body">
-            <div class="w-50 container justify-content-center">
-                <button id="signout_button" class="btn btn-white text-white g_id_signout">Log out</button>
+    <!-- header -->
+    <div class="sticky-top">
+        <nav class="navbar bg-dark navbar-expand-md navbar-dark">
+            <div class="container">
+                <a class="navbar-brand text-white fs-3 me-3" href="#">Fax or cap</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item my-auto">
+                            <a class="nav-link text-white" href="/feed">
+                                <i class="bi bi-arrow-left-short"></i>
+                                Back to feed
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <% if (profile) { %>
+                            <span id="signed-in"></span>
+                            <a class="nav-link text-white" href="/profile/<%= profile.username %>">
+                                <img class="profile-picture" src="<%= profile.img_link %>" alt="profile-picture">
+                                Profile
+                            </a>
+                            <% } else { %>
+                                <a class="nav-link text-white" href="/auth/sign_in">
+                                    <i class="bi bi-at"></i>
+                                    Sign in
+                                </a>
+                            <% } %>
+                        </li>
+                    </ul>
+                    <!-- Search, implement later
+                    <form class="d-flex" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-light" type="submit">Search</button>
+                    </form>-->
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div class="container-md">
+        <div class="row">
+            <div class="col-12 col-xl-6">
+                <div class="card bg-dark rounded-4 m-3">
+                    <div class="card-body">
+                        <h1 class="card-title">
+                            <img class="profile-picture-lg" alt="Profile picture" src="<%= account.img_link%>">
+                            <span id="username" class="text-light"><%= account.username%></span>
+                            <!-- display stats -->
+
+                            <% if (account.account_id === profile.account_id) { %>
+                                <h3 class="card-header text-white border-white text-center">
+                                </h3>
+                                <div class="card-body">
+                                    <div class="w-50 container justify-content-center text-center">
+                                        <button id="signout_button" class="m-auto btn btn-white text-white
+                                        g_id_signout">Log out</button>
+                                    </div>
+                                </div>
+                            <% } %>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-xl-6">
+                <% if (posts !== []){ %>
+                    <div class="container-md justify-content-center  cards-container" id="card-list">
+                        <% posts.forEach(post => { %>
+                            <div class="card bg-dark rounded-4 m-3">
+                                <div class="card-body">
+                                    <h5 class="card-title text-light fs-3">
+                                        <!--<i class="bi bi-person-circle me-2"></i>-->
+                                        <img class="profile-picture" src="<%= post.img_link %>" alt="profile-picture">
+                                        <span class="author"><%= post.username %></span>
+                                        <span class="card-text text-secondary fs-5 time">· <%= post.time_since %> ago ·</span>
+                                        <% if (post.vote_type === 1) { %>
+                                            <span class="fax-button active btn btn-dark text-light py-1px-3 fs-5">FAX</span>
+                                        <% } else { %>
+                                            <span class="fax-button btn btn-dark text-light py-1px-3 fs-5">FAX</span>
+                                        <% } if (post.vote_type === 0) { %>
+                                            <span class="cap-button active btn btn-dark text-light py-1 px-3 fs-5">CAP</span>
+                                        <% } else { %>
+                                            <span class="cap-button btn btn-dark text-light py-1 px-3 fs-5">CAP</span>
+                                        <% } %>
+                                        <span class="post-id d-none"><%= post.post_id %></span>
+                                    </h5>
+                                    <div class="card-text text-light fs-4">
+                                        <span class="content"><%= post.content %></span>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }); %>
+                    </div>
+                <% } else { %>
+                    <div class="center">
+                        <h1 class="text-black bg-black z-3" id="nothing-here">There's nothing here...</h1>
+                    </div>
+                <% } %>
             </div>
         </div>
     </div>
 
+    <script id="post-template" type="text/template">
+        <div class="card bg-dark rounded-4 m-3">
+            <div class="card-body">
+                <h5 class="card-title text-light fs-3">
+                    <img class="profile-picture" alt="profile-picture">
+                    <span class="author"></span>
+                    <span class="time card-text text-secondary fs-5">· {time} ago ·</span>
+                    <span class="fax-button btn btn-dark text-light py-1 px-3 fs-5">FAX</span>
+                    <span class="cap-button btn btn-dark text-light py-1 px-3 fs-5">CAP</span>
+                    <span class="post-id d-none"></span>
+                </h5>
+                <div class="card-text text-light fs-4">
+                    <span class="content"></span>
+                </div>
+            </div>
+        </div>
+    </script>
+
     <script src="/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="/profile/profile.js"></script>
+    <script src="/profile_page/profile.js"></script>
 </body>
 </html>

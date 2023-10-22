@@ -57,5 +57,33 @@ module.exports = (params) => {
         return response.json(posts);
     });
 
+    router.get('/new_content/:user/', async (request, response) => {
+        const session = await database.getSessionBySessionId(request.session.id);
+        const account = await database.getAccountByUsername(request.params.user);
+        if (!account) return response.json([]);
+
+        const amount = parseInt(request.query.amount) || 1;
+        let posts = [];
+
+        if (session) {
+            posts = await database.getAccountAndVotesPosts(session.account_id, account.google_id, amount);
+            posts.forEach(post => {
+                if (!post.vote_type) return;
+                post.vote_type = post.vote_type.readUInt8(0);
+            });
+        } else {
+            request.session.id = null;
+            posts = await database.getAccountPosts(account.google_id, amount);
+        }
+
+        const now = Date.now();
+        posts.forEach(post => {
+            const post_date = Date.parse(post.created_at);
+            const difference = now - post_date;
+            post.time_since = GetTimeString(String(difference));
+        });
+        return response.json(posts);
+    });
+
     return router;
 }
