@@ -33,7 +33,10 @@ module.exports = (params) => {
            post.time_since = GetTimeString(String(difference));
        });
 
-       return response.render('profile', { posts, profile, account });
+       let lastPost = 0;
+       if (posts.length > 0) lastPost = posts[posts.length - 1].post_id;
+
+       return response.render('profile', { posts, profile, account, lastPost });
    });
 
     return router;

@@ -28,6 +28,13 @@ class Database {
         );
     }
 
+    async removePost(post_id) {
+        await this.connection.execute(
+            "DELETE FROM posts WHERE post_id = ?",
+            [post_id]
+        );
+    }
+
     async getAllPosts() {
         const result = await this.connection.query(
             "SELECT * FROM posts"
@@ -35,16 +42,17 @@ class Database {
         return result[0];
     }
 
-    async getPosts(amount) {
+    async getPosts(amount, lastPost = 0) {
         const result = await this.connection.query(
             "SELECT posts.account_id, content, created_at, accounts.username, accounts.img_link " +
             "FROM posts LEFT JOIN accounts ON posts.account_id = accounts.google_id " +
+            "WHERE posts.post_id > ? " +
             "LIMIT ?"
-        ,[amount]);
+        ,[lastPost, amount]);
         return result[0];
     }
 
-    async getPostsAndVotesByAccount(account_id, amount) {
+    async getPostsAndVotesByAccount(account_id, amount, lastPost = 0) {
         const result = await this.connection.query(
             "SELECT posts.post_id, posts.account_id, content, created_at, vote_type, accounts.img_link," +
             " accounts.username" +
@@ -52,8 +60,9 @@ class Database {
             "(SELECT vote_type, account_id, post_id FROM votes WHERE account_id=?) as votes_1 " +
             "ON posts.account_id=votes_1.account_id AND posts.post_id=votes_1.post_id " +
             "LEFT JOIN accounts on accounts.google_id = posts.account_id " +
+            "WHERE posts.post_id > ? " +
             "LIMIT ?",
-            [account_id, amount]
+            [account_id, lastPost, amount]
         )
         return result[0];
     }
@@ -128,6 +137,13 @@ class Database {
         return results[0][0];
     }
 
+    async updateUsername(google_id, new_username) {
+        await this.connection.execute(
+            "UPDATE accounts SET username = ? WHERE google_id = ?",
+            [new_username, google_id]
+        )
+    }
+
     async addVote(vote) {
         let previousVote = await this.connection.query(
             "SELECT vote_id FROM votes WHERE post_id=? AND account_id=?",
@@ -148,7 +164,7 @@ class Database {
         }
     }
 
-    async getAccountAndVotesPosts(requester_account_id, requested_account_id, amount) {
+    async getAccountAndVotesPosts(requester_account_id, requested_account_id, amount, lastPost = 0) {
         const result = await this.connection.query(
             "SELECT posts_1.post_id, posts_1.account_id, content, created_at, vote_type, accounts.img_link," +
             " accounts.username" +
@@ -156,22 +172,31 @@ class Database {
             "(SELECT vote_type, account_id, post_id FROM votes WHERE account_id=?) as votes_1 " +
             "ON posts_1.account_id=votes_1.account_id AND posts_1.post_id=votes_1.post_id " +
             "LEFT JOIN accounts on accounts.google_id = posts_1.account_id " +
+            "WHERE posts_1.post_id > ? " +
             "LIMIT ?",
-            [requested_account_id, requester_account_id, amount]
+            [requested_account_id, requester_account_id, lastPost, amount]
         )
         return result[0];
     }
 
-    async getAccountPosts(account_id, amount) {
+    async getAccountPosts(account_id, amount, lastPost = 0) {
         const result = await this.connection.query(
             "SELECT posts.post_id, posts.account_id, content, created_at, accounts.img_link," +
             " accounts.username" +
             " FROM (SELECT * FROM posts WHERE account_id=?) as posts LEFT JOIN accounts ON " +
             "posts.account_id = accounts.google_id " +
+            "WHERE posts.post_id > ? " +
             "LIMIT ?",
-            [account_id, amount]
+            [account_id, lastPost, amount]
         )
         return result[0];
+    }
+
+    async removeVote(vote){
+        await this.connection.execute(
+            "DELETE FROM votes WHERE post_id = ? AND account_id = ?",
+            [vote.post_id, vote.account_id]
+        )
     }
 }
 

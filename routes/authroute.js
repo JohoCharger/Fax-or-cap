@@ -20,6 +20,7 @@ module.exports = (params) => {
         const credential = jwtDecode(request.body.credential);
         const account_id = credential.sub;
 
+        let new_account = false;
         const account = await database.getAccountByGoogleId(account_id);
         if (!account) {
             const creds = {
@@ -29,6 +30,10 @@ module.exports = (params) => {
                 img_link: credential.picture
             }
             await database.createNewAccount(creds);
+            request.session.new_account = true;
+            new_account = true;
+        } else {
+            request.session.new_account = false;
         }
         const session_id = uuid.v4();
 
@@ -37,7 +42,9 @@ module.exports = (params) => {
         } else {
             await database.createNewSession(session_id, account_id);
         }
+
         request.session.id = session_id;
+        if (new_account) return response.redirect('/auth/new_user');
         return response.redirect('/feed');
     });
 
@@ -48,6 +55,50 @@ module.exports = (params) => {
         request.session.id = null;
         return response.redirect('/feed');
     });
+
+    router.post('/stay_signed', (request, response) => {
+        if (request.body.stay) {
+            request.session.maxAge = request.sessionOptions.maxAge;
+        } else if (!request.body.stay) {
+            request.session.maxAge = 0;
+        }
+        return response.status(200).end();
+    });
+
+    router.get('/new_user', async (request, response) => {
+        const session = await database.getSessionBySessionId(request.session.id);
+        if (session) {
+            if (request.session.new_account) {
+                const account = await database.getAccountByGoogleId(session.account_id);
+                request.session.new_account = false;
+                return response.render('new_user', { account });
+            }
+        }
+        return response.redirect('/feed');
+    });
+
+    router.get('/username_available', async (request, response) => {
+        const session = await database.getSessionBySessionId(request.session.id);
+        if (!session) return response.redirect('/login');
+
+        const username = request.query.username;
+
+        const account = await database.getAccountByUsername(username);
+        if (account) {
+            return response.json({available: false});
+        } else {
+            return response.json({available: true});
+        }
+    });
+
+    router.post('/change_username', async (request, response) => {
+        const session = await database.getSessionBySessionId(request.session.id);
+        if (!session) return response.redirect('/login');
+
+        await database.updateUsername(session.account_id, request.body.newUsername);
+
+        return response.status(200).end();
+    })
 
 
     return router;

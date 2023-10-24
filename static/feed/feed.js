@@ -6,20 +6,22 @@ const newPostSubmitButton = document.getElementById("submit-post");
 const inputTextarea = document.getElementById("input-textarea");
 const signInFirst = document.getElementById("sign-in-first");
 const signedIn = document.getElementById("signed-in");
+const lastPost = document.getElementById("last-post");
 
 function requestNewPosts(amount) {
-    const Http = new XMLHttpRequest()
-    Http.open("GET", `http://localhost:3000/feed/new_content?amount=${amount}`);
+    const Http = new XMLHttpRequest();
+    Http.open("GET", `http://localhost:3000/feed/new_content?amount=${amount}&last_post=${lastPost.textContent}`);
     Http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     Http.send();
 
     Http.onreadystatechange = (event) => {
         if (Http.readyState !== 4) return;
         let posts = JSON.parse(Http.responseText);
-        if (posts === []) return;
+        if (posts.length === 0) return;
         posts.forEach(post => {
             displayNewPost(post);
-        })
+        });
+        lastPost.textContent = posts[posts.length - 1].post_id;
     }
 }
 
@@ -62,23 +64,39 @@ function loadNewPosts(e) {
 
 function faxButtonPressed(event) {
     if (!signedIn) return;
+
     let target = event.target;
+    const post_id = target.parentNode.querySelector('.post-id').textContent;
+
+    if (event.target.classList.contains('active')) {
+        target.classList.remove('active');
+        removeVote( { post_id } );
+        return
+    }
     let correspondingCapButton = target.parentNode.querySelector('.cap-button');
     target.classList.add(("active"));
     correspondingCapButton.classList.remove("active");
 
-    const post_id = target.parentNode.querySelector('.post-id').textContent;
     sendVote({ post_id, vote_type: 1 });
 }
 
 function capButtonPressed(event) {
     if (!signedIn) return;
-    let target = event.target;
-    let correspondingFaxButton = target.parentNode.querySelector('.fax-button');
-    correspondingFaxButton.classList.remove("active");
-    target.classList.add(("active"));
 
+    let target = event.target;
     const post_id = target.parentNode.querySelector('.post-id').textContent;
+
+
+    if (event.target.classList.contains('active')) {
+        target.classList.remove('active');
+        removeVote( { post_id } );
+        return
+
+    }
+    let correspondingFaxButton = target.parentNode.querySelector('.fax-button');
+    target.classList.add(("active"));
+    correspondingFaxButton.classList.remove("active");
+
     sendVote({ post_id, vote_type: 0 });
 }
 
@@ -87,6 +105,13 @@ function sendVote(vote) {
     http.open('POST', 'http://localhost:3000/vote/add');
     http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     http.send(JSON.stringify(vote));
+}
+
+function removeVote(post_id) {
+    const http = new XMLHttpRequest();
+    http.open('DELETE', 'http://localhost:3000/vote/remove');
+    http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    http.send(JSON.stringify(post_id));
 }
 
 function toggleNewPostForm() {
@@ -101,7 +126,7 @@ function toggleNewPostForm() {
 
 function submitNewPost() {
     const http = new XMLHttpRequest();
-    http.open("POST", 'http://localhost:3000/new_post/submit');
+    http.open("POST", 'http://localhost:3000/post/submit');
     http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     http.send(JSON.stringify({
         content: inputTextarea.value,

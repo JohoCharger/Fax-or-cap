@@ -12,7 +12,7 @@ module.exports = (params) => {
         let posts = [];
         const session = await database.getSessionBySessionId(request.session.id);
         if (session) {
-            posts = await database.getPostsAndVotesByAccount(session.account_id, 10);
+            posts = await database.getPostsAndVotesByAccount(session.account_id, 1);
             posts.forEach(post => {
                 if (!post.vote_type) return;
                 post.vote_type = post.vote_type.readUInt8(0);
@@ -28,23 +28,27 @@ module.exports = (params) => {
             const difference = now - post_date;
             post.time_since = GetTimeString(String(difference));
         });
-        return response.render("feed", { posts, profile });
+        let lastPost = 0
+        if (posts.length > 0) lastPost = posts[posts.length - 1].post_id;
+
+        return response.render("feed", { posts, profile, lastPost });
     });
 
     router.get('/new_content', async (request, response) => {
         const session = await database.getSessionBySessionId(request.session.id);
         const amount = parseInt(request.query.amount) || 1;
+        const lastPost = parseInt(request.query.last_post) || 0;
         let posts = [];
 
         if (session) {
-            posts = await database.getPostsAndVotesByAccount(session.account_id, amount);
+            posts = await database.getPostsAndVotesByAccount(session.account_id, amount, lastPost);
             posts.forEach(post => {
                 if (!post.vote_type) return;
                 post.vote_type = post.vote_type.readUInt8(0);
             });
         } else {
             request.session.id = null;
-            posts = await database.getPosts(amount);
+            posts = await database.getPosts(amount, lastPost);
         }
 
         const now = Date.now();
@@ -63,17 +67,18 @@ module.exports = (params) => {
         if (!account) return response.json([]);
 
         const amount = parseInt(request.query.amount) || 1;
+        const lastPost = parseInt(request.query.last_post) || 0;
         let posts = [];
 
         if (session) {
-            posts = await database.getAccountAndVotesPosts(session.account_id, account.google_id, amount);
+            posts = await database.getAccountAndVotesPosts(session.account_id, account.google_id, amount, lastPost);
             posts.forEach(post => {
                 if (!post.vote_type) return;
                 post.vote_type = post.vote_type.readUInt8(0);
             });
         } else {
             request.session.id = null;
-            posts = await database.getAccountPosts(account.google_id, amount);
+            posts = await database.getAccountPosts(account.google_id, amount, lastPost);
         }
 
         const now = Date.now();
@@ -82,6 +87,7 @@ module.exports = (params) => {
             const difference = now - post_date;
             post.time_since = GetTimeString(String(difference));
         });
+
         return response.json(posts);
     });
 

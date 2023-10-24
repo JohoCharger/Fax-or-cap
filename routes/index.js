@@ -1,6 +1,6 @@
 const express = require('express');
 const FeedRouter = require('./feedroute');
-const NewPostRouter = require('./newpostroute');
+const NewPostRouter = require('./postroute');
 const AuthRouter = require('./authroute');
 const VoteRouter = require('./voteroute');
 const ProfileRouter = require('./profileroute');
@@ -23,7 +23,7 @@ module.exports = (params) => {
     //other routes
     router.use('/feed', FeedRouter({database}));
     router.use('/auth', AuthRouter({database}));
-    router.use('/new_post', NewPostRouter({database}));
+    router.use('/post', NewPostRouter({database}));
     router.use('/vote', VoteRouter({database}));
     router.use('/profile', ProfileRouter({database}));
 

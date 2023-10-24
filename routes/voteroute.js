@@ -25,5 +25,16 @@ module.exports = (params) => {
         return response.status(200).end();
     });
 
+    router.delete('/remove', async function(request, response) {
+        const session = await database.getSessionBySessionId(request.session.id);
+        if (!session) return response.status(403).send('lol wtf');
+
+        const post_id = request.body.post_id;
+        const account_id = session.account_id;
+
+        await database.removeVote( { post_id, account_id } );
+        return response.status(200).end();
+    });
+
     return router;
 }

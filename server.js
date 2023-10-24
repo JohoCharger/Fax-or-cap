@@ -13,6 +13,10 @@ const app = express();
 const database = new Database();
 const port = process.env.PORT || 3000;
 
+app.set("views", path.join(__dirname, "./views"))
+app.set("view engine", "ejs");
+app.set("trust proxy", 1);
+
 app.use(helmet({
     referrerPolicy: { policy: 'no-referrer-when-downgrade' },
     contentSecurityPolicy: {
@@ -26,15 +30,16 @@ app.use(helmet({
 app.use(cookieSession({
     name: 'session',
     keys: ['fdjvnbklbasdapoi7353gnfds', '543097623gnjfdsbnda2vnat4p35', 'hdfakllbkbalkhry2u5y901f'],
-    maxAge: 7 * 24 * 60 * 60 * 1000
-}))
+    maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+}));
+
+app.use(function (request, response, next) {
+    request.sessionOptions.maxAge = request.session.maxAge || request.sessionOptions.maxAge
+    next()
+})
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-app.set("views", path.join(__dirname, "./views"))
-app.set("view engine", "ejs");
-app.set("trust proxy", 1);
 
 app.use(routes({ database }));
 

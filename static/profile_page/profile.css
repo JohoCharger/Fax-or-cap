@@ -43,6 +43,5 @@ textarea {
 @media (min-width: 1200px) {
     #card-list {
         overflow-y: scroll;
-        height: 50em;
     }
 }

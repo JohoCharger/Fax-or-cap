@@ -24,7 +24,8 @@
                      data-context="signin"
                      data-ux_mode="redirect"
                      data-login_uri="http://localhost:3000/auth/google"
-                     data-auto_prompt="false">
+                     data-auto_prompt="false"
+                     data-auto_select="true">
                 </div>
 
                 <div class="g_id_signin"
@@ -38,12 +39,12 @@
                 </div>
             </div>
             <div class="container text-center mt-3">
-                <input type="checkbox" name="stay-signed" id="stay-signed">
+                <input type="checkbox" name="stay-signed" id="stay-signed" checked="checked">
                 <label class="text-white" for="stay-signed">Stay signed in?</label>
             </div>
         </div>
     </div>
-
+    <script type="text/javascript" src="/signin/signin.js"></script>
     <script src="/bootstrap/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

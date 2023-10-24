@@ -15,20 +15,22 @@ const postTemplate = document.getElementById("post-template").innerHTML;
 const cardList = document.getElementById("card-list");
 const accountName = document.getElementById('username').textContent;
 const signedIn = document.getElementById("signed-in");
+const lastPost = document.getElementById('last-post');
 
 function requestNewPosts(amount) {
     const Http = new XMLHttpRequest()
-    Http.open("GET", `http://localhost:3000/feed/new_content/${accountName}?amount=${amount}`);
+    Http.open("GET", `http://localhost:3000/feed/new_content/${accountName}?amount=${amount}&last_post=${lastPost.textContent}`);
     Http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     Http.send();
 
     Http.onreadystatechange = (event) => {
         if (Http.readyState !== 4) return;
         let posts = JSON.parse(Http.responseText);
-        if (posts === []) return;
+        if (posts.length === 0) return;
+        lastPost.textContent = posts[posts.length - 1].post_id;
         posts.forEach(post => {
             displayNewPost(post);
-        })
+        });
     }
 }
 
@@ -62,6 +64,11 @@ function getScrollBottom() {
     return boundingBox.bottom;
 }
 
+function resizeCardList() {
+    if (window.innerWidth < 1200) return;
+    cardList.style.height = String(window.innerHeight - 100) + 'px';
+}
+
 function loadNewPosts(e) {
     const bottom = getScrollBottom();
     if (bottom <= window.innerHeight) {
@@ -71,23 +78,39 @@ function loadNewPosts(e) {
 
 function faxButtonPressed(event) {
     if (!signedIn) return;
+
     let target = event.target;
+    const post_id = target.parentNode.querySelector('.post-id').textContent;
+
+    if (event.target.classList.contains('active')) {
+        target.classList.remove('active');
+        removeVote( { post_id } );
+        return
+    }
     let correspondingCapButton = target.parentNode.querySelector('.cap-button');
     target.classList.add(("active"));
     correspondingCapButton.classList.remove("active");
 
-    const post_id = target.parentNode.querySelector('.post-id').textContent;
     sendVote({ post_id, vote_type: 1 });
 }
 
 function capButtonPressed(event) {
     if (!signedIn) return;
-    let target = event.target;
-    let correspondingFaxButton = target.parentNode.querySelector('.fax-button');
-    correspondingFaxButton.classList.remove("active");
-    target.classList.add(("active"));
 
+    let target = event.target;
     const post_id = target.parentNode.querySelector('.post-id').textContent;
+
+
+    if (event.target.classList.contains('active')) {
+        target.classList.remove('active');
+        removeVote( { post_id } );
+        return
+
+    }
+    let correspondingFaxButton = target.parentNode.querySelector('.fax-button');
+    target.classList.add(("active"));
+    correspondingFaxButton.classList.remove("active");
+
     sendVote({ post_id, vote_type: 0 });
 }
 
@@ -98,9 +121,34 @@ function sendVote(vote) {
     http.send(JSON.stringify(vote));
 }
 
-window.setInterval(loadNewPosts, 200);
+function removePost(event) {
+    const target = event.target;
+    const post_id = target.parentNode.querySelector('.post-id').textContent;
+    const http = new XMLHttpRequest();
+    http.open('DELETE', 'http://localhost:3000/post/remove');
+    http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    http.send(JSON.stringify({ post_id }));
+
+    http.onreadystatechange = (event) => {
+        if (http.readyState !== 4) return;
+        if (http.status === 200) {
+            target.parentNode.parentNode.parentNode.style.display = 'none';
+        }
+    }
+}
+
+function removeVote(post_id) {
+    const http = new XMLHttpRequest();
+    http.open('DELETE', 'http://localhost:3000/vote/remove');
+    http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    http.send(JSON.stringify(post_id));
+}
+
+window.setInterval(resizeCardList, 300);
+window.setInterval(loadNewPosts, 500);
 
 window.onload = () => {
+    resizeCardList();
     loadNewPosts();
 
     let faxButtons = document.querySelectorAll(".fax-button");
@@ -111,5 +159,10 @@ window.onload = () => {
     let capButtons = document.querySelectorAll(".cap-button");
     capButtons.forEach(capButton => {
         capButton.onclick = capButtonPressed;
+    });
+
+    let deleteButtons = document.querySelectorAll(".delete-button");
+    deleteButtons.forEach(deleteButton => {
+        deleteButton.onclick = removePost;
     });
 }

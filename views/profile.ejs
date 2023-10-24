@@ -79,7 +79,7 @@
             </div>
             <div class="col-12 col-xl-6">
                 <% if (posts !== []){ %>
-                    <div class="container-md justify-content-center  cards-container" id="card-list">
+                    <div class="container-md justify-content-center cards-container" id="card-list">
                         <% posts.forEach(post => { %>
                             <div class="card bg-dark rounded-4 m-3">
                                 <div class="card-body">
@@ -96,6 +96,11 @@
                                             <span class="cap-button active btn btn-dark text-light py-1 px-3 fs-5">CAP</span>
                                         <% } else { %>
                                             <span class="cap-button btn btn-dark text-light py-1 px-3 fs-5">CAP</span>
+                                        <% } %>
+
+                                        <% if (account.account_id === profile.account_id) { %>
+                                            <span class="delete-button btn btn-danger text-light py-1px-3
+                                            fs-5">Delete</span>
                                         <% } %>
                                         <span class="post-id d-none"><%= post.post_id %></span>
                                     </h5>
@@ -114,6 +119,7 @@
             </div>
         </div>
     </div>
+    <span class="d-none" id="last-post"><%=lastPost%></span>
 
     <script id="post-template" type="text/template">
         <div class="card bg-dark rounded-4 m-3">
