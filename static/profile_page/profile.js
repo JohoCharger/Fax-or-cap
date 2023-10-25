@@ -15,7 +15,7 @@ if (ownAccount) {
     signoutButton.onclick = () => {
         google.accounts.id.disableAutoSelect();
         const http = new XMLHttpRequest();
-        http.open('GET', 'http://localhost:3000/auth/log_out');
+        http.open('GET', '/api/account/log_out');
         http.send();
 
         http.onreadystatechange = (event) => {
@@ -27,7 +27,7 @@ if (ownAccount) {
 
 function requestNewPosts(amount) {
     const Http = new XMLHttpRequest()
-    Http.open("GET", `/feed/new_content/${accountName}?amount=${amount}&last_post=${lastPost.textContent}`);
+    Http.open("GET", `/api/feed/new_content/${accountName}?amount=${amount}&last_post=${lastPost.textContent}`);
     Http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     Http.send();
 
@@ -76,7 +76,7 @@ function promptDeleteButton(event) {
 
 function removePost(targetNode, post_id) {
     const http = new XMLHttpRequest();
-    http.open('DELETE', '/post/remove');
+    http.open('DELETE', '/api/post/remove');
     http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     http.send(JSON.stringify({ post_id }));
     hidePostDeletionVerification();

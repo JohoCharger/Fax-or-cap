@@ -140,14 +140,14 @@ function capButtonPressed(event) {
 
 function sendVote(vote) {
     const http = new XMLHttpRequest();
-    http.open('POST', '/vote/add');
+    http.open('POST', '/api/vote/add');
     http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     http.send(JSON.stringify(vote));
 }
 
 function removeVote(post_id) {
     const http = new XMLHttpRequest();
-    http.open('DELETE', '/vote/remove');
+    http.open('DELETE', '/api/vote/remove');
     http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     http.send(JSON.stringify(post_id));
 }

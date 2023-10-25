@@ -3,8 +3,7 @@ const path = require('path');
 const bodyParser = require("body-parser");
 const helmet = require('helmet');
 const cookieSession = require('cookie-session');
-const jwtDecode = require('jwt-decode');
-const uuid = require('uuid');
+const cookieParser = require('cookie-parser');
 const routes = require("./routes/index");
 
 const Database = require("./database");
@@ -33,6 +32,8 @@ app.use(cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
 }));
 
+app.use(cookieParser());
+
 app.use(function (request, response, next) {
     request.sessionOptions.maxAge = request.session.maxAge || request.sessionOptions.maxAge
     next()
@@ -41,12 +42,19 @@ app.use(function (request, response, next) {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use(routes({ database }));
-
 app.use(express.static('static/'));
 app.use("/bootstrap", express.static("node_modules/bootstrap/"));
 app.use("/bootstrap-icons", express.static("node_modules/bootstrap-icons/font/"));
 
+app.use(routes({ database }));
+
+//error handling
+app.use((error, request, response, next) => {
+    console.log(error);
+    const status = error.status || 500;
+    const message = error.message || 'Internal Server Error';
+    return response.status(status).render('error', { error: { status, message } });
+});
 
 database.connect();
 

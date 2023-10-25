@@ -1,9 +1,7 @@
 const express = require('express');
-const FeedRouter = require('./feedroute');
-const NewPostRouter = require('./postroute');
 const AuthRouter = require('./authroute');
-const VoteRouter = require('./voteroute');
 const ProfileRouter = require('./profileroute');
+const ApiRouter = require('./api/apiroute');
 
 const {PluggableAuthHandler} = require("google-auth-library/build/src/auth/pluggable-auth-handler");
 
@@ -16,16 +14,33 @@ module.exports = (params) => {
        return response.redirect('/feed');
     });
 
-    router.get('/profile', (request, response) => {
-        response.render('profile');
+    router.get("/feed", async (request, response, next) => {
+        try {
+            let profile = false;
+
+            const session = await database.getSessionBySessionId(request.session.id);
+            if (session) profile = await database.getAccountByGoogleId(session.account_id);
+            else request.session.id = null;
+
+            return response.render("feed", { profile });
+        } catch (error) {
+            return next(error)
+        }
     });
 
     //other routes
-    router.use('/feed', FeedRouter({database}));
+    router.use('/api', ApiRouter({database}));
     router.use('/auth', AuthRouter({database}));
-    router.use('/post', NewPostRouter({database}));
-    router.use('/vote', VoteRouter({database}));
     router.use('/profile', ProfileRouter({database}));
+
+    //404
+    router.use((request, response) => {
+        const error = {
+            status: 404,
+            message: 'The page you requested does not exist'
+        }
+        return response.render('error', { error });
+    });
 
     return router;
 }

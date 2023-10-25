@@ -11,7 +11,7 @@ const loading = document.getElementById("loading");
 
 function requestNewPosts(amount) {
     const Http = new XMLHttpRequest();
-    Http.open("GET", `/feed/new_content?amount=${amount}&last_post=${lastPost.textContent}`);
+    Http.open("GET", `/api/feed/new_content?amount=${amount}&last_post=${lastPost.textContent}`);
     Http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     Http.send();
 
@@ -42,7 +42,7 @@ function toggleNewPostForm() {
 
 function submitNewPost() {
     const http = new XMLHttpRequest();
-    http.open("POST", '/post/submit');
+    http.open("POST", '/api/post/create');
     http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     http.send(JSON.stringify({
         content: inputTextarea.value,

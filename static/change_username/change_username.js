@@ -14,21 +14,38 @@ function displayMessage(message) {
     }
 }
 
+const alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const numbers = '0123456789';
+const allowedSpecialChars = '!@#$%*_,./?-';
+
 function usernamePromptChanged() {
     const newUsername = newUsernameInput.value;
+
+    for (let i = 0; i < newUsername.length; i++) {
+        const char = newUsername.charAt(i);
+        if (!alphabet.includes(char) && !numbers.includes(char) && !allowedSpecialChars.includes(char)) {
+            displayMessage({
+                message: 'Username contains invalid characters',
+                type: 'error'
+            });
+            return;
+        }
+    }
+
+
     if (newUsername.length < 3) {
         displayMessage({
             message: 'Name must be at least 3 characters long',
             type: 'error'
         });
-    } else if (newUsername.length > 30) {
+    } else if (newUsername.length > 20) {
         displayMessage({
-            message: 'Name must be at most 30 characters long',
+            message: 'Name must be at most 20 characters long',
             type: 'error'
         });
     } else {
         const http = new XMLHttpRequest();
-        http.open("GET", `/auth/username_available?username=${newUsername}`);
+        http.open("GET", `/api/account/username_available?username=${newUsername}`);
         http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         http.send();
 
@@ -54,7 +71,7 @@ function submitNewUsername() {
     if (!canSubmit) return;
     const newUsername = newUsernameInput.value;
     const http = new XMLHttpRequest();
-    http.open("POST", `/auth/change_username`);
+    http.open("POST", `/api/account/change_username`);
     http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     http.send(JSON.stringify({ newUsername }));
 
