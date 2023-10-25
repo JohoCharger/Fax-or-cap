@@ -1,27 +1,33 @@
-function GetTimeString2(time) {
-    const timeSplit = time.split('');
-    if (timeSplit.length <= 5) {
-        return "1min";
-    } else if (timeSplit.length === 6) {
-        return timeSplit[0] + "min"; //Single digit minutes
-    } else if (timeSplit.length === 7) {
-        return timeSplit[0] + timeSplit[1] + "min"; //Two digit minutes
-    } else if (timeSplit.length === 8) {
-        return timeSplit[0] + "hr"; //Single digit hours
-    } else if (timeSplit.length === 9) {
-        return timeSplit[0] + timeSplit[1] + "hr"; //Two Digit hours
-    } else if (timeSplit.length === 10) {
-        return timeSplit[0] + "d"; //Single Digit days
-    } else if (timeSplit.length === 11) {
-        return timeSplit[0] + timeSplit[1] + "d"; //Two Digit days
-    } else if (timeSplit.length === 12) {
-        return timeSplit[0] + timeSplit[1] + timeSplit[2] + "d"; //Three Digit days
+function getFaxOrCapString(post) {
+    if (post.fax === 0 && post.cap === 0) return 'no votes yet';
+    if (post.fax === 0 && post.cap !== 0) return '100% cap';
+    if (post.fax !== 0 && post.cap === 0) return '100% fax';
+    if (post.fax === post.cap) return "50% fax";
+
+    const total = post.fax + post.cap;
+    if (post.fax > post.cap) {
+        return String(Math.round(post.fax / total * 100)) + '% fax'
     } else {
-        return timeSplit[0] + "yr"; //Years
+        return String(Math.round(post.cap / total * 100)) + '% cap'
     }
 }
 
-function GetTimeString(time) {
+function getFaxOrCapPercentage(account) {
+    if (account.fax === 0 && account.cap === 0) return 'no votes yet';
+    if (account.fax === 0 && account.cap !== 0) return '100% capper';
+    if (account.fax !== 0 && account.cap === 0) return '100% fax spitter';
+    if (account.fax === account.cap) return "50% fax spitter";
+
+    const total = account.fax + account.cap;
+    if (account.fax > account.cap) {
+        return String(Math.round(account.fax / total * 100)) + '% fax spitter';
+    } else {
+        return String(Math.round(account.cap / total * 100)) + '% capper';
+    }
+}
+
+
+function getTimeString(time) {
     time /= 60000;
     if (time < 1) return '1min';
     if (time < 60) return String(Math.floor(time)) + 'min';
@@ -32,4 +38,4 @@ function GetTimeString(time) {
     return String(Math.floor(time / 365)) + 'yr';
 }
 
-module.exports = { GetTimeString };
+module.exports = { getTimeString, getFaxOrCapString, getFaxOrCapPercentage };

@@ -14,11 +14,11 @@
     <div class="sticky-top">
         <nav class="navbar bg-dark navbar-expand-md navbar-dark">
             <div class="container">
-                <a class="navbar-brand text-white fs-3 me-3" href="#">Fax or cap</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                <a class="navbar-brand text-white fs-3 me-3" href="/feed">Fax or cap</a>
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarNav"
                         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+                    <i class="bi bi-list"></i>
                 </button>
                 <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                     <ul class="navbar-nav">
@@ -30,11 +30,11 @@
                         </li>
                         <li class="nav-item">
                             <% if (profile) { %>
-                                <span id="signed-in"></span>
-                                <a class="nav-link text-white" href="/profile/<%=profile.username%>">
-                                    <img class="profile-picture" src="<%= profile.img_link %>" alt="profile-picture">
-                                    Profile
-                                </a>
+                            <span id="signed-in"></span>
+                            <a class="nav-link text-white" href="/profile/<%= profile.username %>">
+                                <img class="profile-picture" src="<%= profile.img_link %>" alt="profile-picture">
+                                Profile
+                            </a>
                             <% } else { %>
                                 <a class="nav-link text-white" href="/auth/sign_in">
                                     <i class="bi bi-at"></i>
@@ -86,52 +86,30 @@
         </div>
     </div>
 
+    <div id='loading' class="w-100 text-center text-secondary mt-3">
+        Loading...
+    </div>
+
     <!-- posts -->
-    <% if (posts !== []){ %>
-        <div class="container-md justify-content-center  cards-container" id="card-list">
-            <% posts.forEach(post => { %>
-                <div class="card bg-dark rounded-4 m-3">
-                    <div class="card-body">
-                        <h5 class="card-title text-light fs-3">
-                            <!--<i class="bi bi-person-circle me-2"></i>-->
-                            <img class="profile-picture" src="<%= post.img_link %>" alt="profile-picture">
-                            <span class="author"><%= post.username %></span>
-                            <span class="card-text text-secondary fs-5 time">· <%= post.time_since %> ago ·</span>
-                            <% if (post.vote_type === 1) { %>
-                                <span class="fax-button active btn btn-dark text-light py-1px-3 fs-5">FAX</span>
-                            <% } else { %>
-                                <span class="fax-button btn btn-dark text-light py-1px-3 fs-5">FAX</span>
-                            <% } if (post.vote_type === 0) { %>
-                                <span class="cap-button active btn btn-dark text-light py-1 px-3 fs-5">CAP</span>
-                            <% } else { %>
-                                <span class="cap-button btn btn-dark text-light py-1 px-3 fs-5">CAP</span>
-                            <% } %>
-                            <span class="post-id d-none"><%= post.post_id %></span>
-                        </h5>
-                        <div class="card-text text-light fs-4">
-                            <span class="content"><%= post.content %></span>
-                        </div>
-                    </div>
-                </div>
-            <% }); %>
-        </div>
-    <% } else { %>
-        <div class="center">
-            <h1 class="text-black bg-black z-3" id="nothing-here">There's nothing here...</h1>
-        </div>
-    <% } %>
-    <span class="d-none" id="last-post"><%=lastPost%></span>
+    <div class="container-md justify-content-center  cards-container" id="card-list"></div>
+
+    <span class="d-none" id="last-post">9999999</span>
 
     <script id="post-template" type="text/template">
         <div class="card bg-dark rounded-4 m-3">
             <div class="card-body">
                 <h5 class="card-title text-light fs-3">
-                    <img class="profile-picture" alt="profile-picture">
-                    <span class="author"></span>
+                    <a class="profile-link link-underline-opacity-0 text-light">
+                        <img class="profile-picture" alt="profile-picture" src="">
+                        <span class="author"></span>
+                    </a>
                     <span class="time card-text text-secondary fs-5">· {time} ago ·</span>
                     <span class="fax-button btn btn-dark text-light py-1 px-3 fs-5">FAX</span>
                     <span class="cap-button btn btn-dark text-light py-1 px-3 fs-5">CAP</span>
                     <span class="post-id d-none"></span>
+                    <span class="fax-count d-none"></span>
+                    <span class="cap-count d-none"></span>
+                    <span class="card-text text-secondary faxorcap fs-5"></span>
                 </h5>
                 <div class="card-text text-light fs-4">
                     <span class="content"></span>
@@ -141,6 +119,7 @@
     </script>
 
     <script src="/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="feedfunctions.js"></script>
     <script type="text/javascript" src="feed/feed.js"></script>
 </body>
 </html>

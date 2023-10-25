@@ -14,6 +14,10 @@ textarea {
     resize: none;
 }
 
+a, span {
+    text-decoration: none!important;
+}
+
 #new-post-form {
     display: none;
 }
@@ -44,4 +48,14 @@ textarea {
     #card-list {
         overflow-y: scroll;
     }
+}
+
+.card-centered {
+    width: 500px;
+    height: 500px;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translate(-50%, 50%);
+    z-index: 100;
 }

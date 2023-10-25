@@ -2,14 +2,14 @@ const staySigned = document.getElementById('stay-signed');
 
 function dontStaySigned() {
     const Http = new XMLHttpRequest();
-    Http.open("POST", `http://localhost:3000/auth/stay_signed`);
+    Http.open("POST", `/auth/stay_signed`);
     Http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     Http.send(JSON.stringify({ stay: false }));
 }
 
 function doStaySigned() {
     const Http = new XMLHttpRequest();
-    Http.open("POST", `http://localhost:3000/auth/stay_signed`);
+    Http.open("POST", `/auth/stay_signed`);
     Http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     Http.send(JSON.stringify({ stay: true }));
 }

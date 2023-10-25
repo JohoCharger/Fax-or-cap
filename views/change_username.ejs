@@ -3,15 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Fax or Cap?</title>
-    <link rel="stylesheet" href="/new_user/new_user.css" type="text/css">
+    <link rel="stylesheet" href="/change_username/change_username.css" type="text/css">
     <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/bootstrap-icons/bootstrap-icons.min.css">
 </head>
 <body>
     <div class="card bg-dark rounded-3 ">
+        <% if ( newAccount ) { %>
         <h3 class="card-header text-white border-white text-center">
             Welcome <%= account.username %>!
         </h3>
+        <% } else { %>
+            <h3 class="card-header text-white border-white text-center">
+                Hello <%= account.username %>
+            </h3>
+        <% } %>
         <div class="card-body">
             <h5 class="card-text text-white text-center mb-4">
                 Pick a username
@@ -28,7 +34,7 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="/new_user/new_user.js"></script>
+    <script type="text/javascript" src="/change_username/change_username.js"></script>
     <script src="/bootstrap/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

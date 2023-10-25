@@ -14,7 +14,7 @@
     <div class="sticky-top">
         <nav class="navbar bg-dark navbar-expand-md navbar-dark">
             <div class="container">
-                <a class="navbar-brand text-white fs-3 me-3" href="#">Fax or cap</a>
+                <a class="navbar-brand text-white fs-3 me-3" href="/feed">Fax or cap</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarNav"
                         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,11 +30,11 @@
                         </li>
                         <li class="nav-item">
                             <% if (profile) { %>
-                            <span id="signed-in"></span>
-                            <a class="nav-link text-white" href="/profile/<%= profile.username %>">
-                                <img class="profile-picture" src="<%= profile.img_link %>" alt="profile-picture">
-                                Profile
-                            </a>
+                                <span id="signed-in"></span>
+                                <a class="nav-link text-white" href="/profile/<%= profile.username %>">
+                                    <img class="profile-picture" src="<%= profile.img_link %>" alt="profile-picture">
+                                    Profile
+                                </a>
                             <% } else { %>
                                 <a class="nav-link text-white" href="/auth/sign_in">
                                     <i class="bi bi-at"></i>
@@ -55,91 +55,105 @@
 
     <div class="container-md">
         <div class="row">
-            <div class="col-12 col-xl-6">
+            <div class="col-12 col-xxl-6">
                 <div class="card bg-dark rounded-4 m-3">
                     <div class="card-body">
-                        <h1 class="card-title">
-                            <img class="profile-picture-lg" alt="Profile picture" src="<%= account.img_link%>">
-                            <span id="username" class="text-light"><%= account.username%></span>
-                            <!-- display stats -->
-
-                            <% if (account.account_id === profile.account_id) { %>
-                                <h3 class="card-header text-white border-white text-center">
-                                </h3>
-                                <div class="card-body">
-                                    <div class="w-50 container justify-content-center text-center">
-                                        <button id="signout_button" class="m-auto btn btn-white text-white
-                                        g_id_signout">Log out</button>
-                                    </div>
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-6 col-12">
+                                    <h1 class="card-title">
+                                        <img class="profile-picture-lg" alt="Profile picture"
+                                             src="<%= account.img_link %>">
+                                        <span id="username" class="text-light"><%= account.username %></span>
+                                    </h1>
                                 </div>
-                            <% } %>
-                        </h1>
+                                <div class="col-md-6 col-12 border-start">
+                                    <h4 class="foc text-white text-center mb-3"><%= account.stats.foc %></h4>
+                                    <p class="foc text-white text-center">Post count: <%= account.stats.postCount %></p>
+                                    <p class="foc text-white text-center">Votes on posts:
+                                        <%= account.stats.fax + account.stats.cap %>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- display stats -->
+
+                        <% if (account.account_id === profile.account_id) { %>
+                            <span id="own-account"></span>
+
+                            <div class="w-50 container justify-content-center text-center">
+                                <a id="change_username" class="my-3 mx-auto btn btn-primary text-white fs-3"
+                                   href="/auth/change_username">
+                                    Change username
+                                </a>
+                            </div>
+
+                            <h3 class="card-header text-white border-white text-center">
+                            </h3>
+                            <div class="w-50 container justify-content-center text-center">
+                                <button id="signout_button" class="my-3 mx-auto btn btn-dark text-white
+                                        g_id_signout fs-3">Log out
+                                </button>
+                            </div>
+                        <% } %>
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-xl-6">
-                <% if (posts !== []){ %>
-                    <div class="container-md justify-content-center cards-container" id="card-list">
-                        <% posts.forEach(post => { %>
-                            <div class="card bg-dark rounded-4 m-3">
-                                <div class="card-body">
-                                    <h5 class="card-title text-light fs-3">
-                                        <!--<i class="bi bi-person-circle me-2"></i>-->
-                                        <img class="profile-picture" src="<%= post.img_link %>" alt="profile-picture">
-                                        <span class="author"><%= post.username %></span>
-                                        <span class="card-text text-secondary fs-5 time">· <%= post.time_since %> ago ·</span>
-                                        <% if (post.vote_type === 1) { %>
-                                            <span class="fax-button active btn btn-dark text-light py-1px-3 fs-5">FAX</span>
-                                        <% } else { %>
-                                            <span class="fax-button btn btn-dark text-light py-1px-3 fs-5">FAX</span>
-                                        <% } if (post.vote_type === 0) { %>
-                                            <span class="cap-button active btn btn-dark text-light py-1 px-3 fs-5">CAP</span>
-                                        <% } else { %>
-                                            <span class="cap-button btn btn-dark text-light py-1 px-3 fs-5">CAP</span>
-                                        <% } %>
-
-                                        <% if (account.account_id === profile.account_id) { %>
-                                            <span class="delete-button btn btn-danger text-light py-1px-3
-                                            fs-5">Delete</span>
-                                        <% } %>
-                                        <span class="post-id d-none"><%= post.post_id %></span>
-                                    </h5>
-                                    <div class="card-text text-light fs-4">
-                                        <span class="content"><%= post.content %></span>
-                                    </div>
-                                </div>
-                            </div>
-                        <% }); %>
+            <div class="col-12 col-xxl-6">
+                <div class="container-md justify-content-center cards-container" id="card-list">
+                    <div id='loading' class="w-100 text-center text-secondary mt-3">
+                        Loading...
                     </div>
-                <% } else { %>
-                    <div class="center">
-                        <h1 class="text-black bg-black z-3" id="nothing-here">There's nothing here...</h1>
-                    </div>
-                <% } %>
+                </div>
             </div>
         </div>
     </div>
-    <span class="d-none" id="last-post"><%=lastPost%></span>
+
+    <span class="d-none" id="last-post">9999999</span>
+
+    <div class="card-centered" id="delete-verification" style="display: none">
+        <div class="bg-dark border border-danger rounded-3 border-3 p-3">
+            <h5 class="card-title text-light text-center">
+                Are you sure you want to delete this post?
+            </h5>
+            <div class="card-text text-light text-center m-3">
+                <span id="delete-post-content">this is my post</span>
+            </div>
+            <div class="container text-center">
+                <button id="delete-button" class="btn btn-danger text-light">Delete</button>
+                <button id="cancel-button" class="btn btn-dark text-light">Cancel</button>
+            </div>
+        </div>
+    </div>
 
     <script id="post-template" type="text/template">
         <div class="card bg-dark rounded-4 m-3">
             <div class="card-body">
                 <h5 class="card-title text-light fs-3">
-                    <img class="profile-picture" alt="profile-picture">
-                    <span class="author"></span>
+                    <a class="profile-link link-underline-opacity-0 text-light">
+                        <img class="profile-picture" alt="profile-picture" src="">
+                        <span class="author"></span>
+                    </a>
                     <span class="time card-text text-secondary fs-5">· {time} ago ·</span>
                     <span class="fax-button btn btn-dark text-light py-1 px-3 fs-5">FAX</span>
                     <span class="cap-button btn btn-dark text-light py-1 px-3 fs-5">CAP</span>
+                    <span class="fax-count d-none"></span>
+                    <span class="cap-count d-none"></span>
+                    <span class="card-text text-secondary faxorcap fs-5"></span>
                     <span class="post-id d-none"></span>
                 </h5>
                 <div class="card-text text-light fs-4">
                     <span class="content"></span>
+                </div>
+                <div class="text-center">
+                    <span class="delete-button btn btn-danger text-light py-1px-3 fs-5">Delete</span>
                 </div>
             </div>
         </div>
     </script>
 
     <script src="/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/feedfunctions.js"></script>
     <script src="/profile_page/profile.js"></script>
 </body>
 </html>

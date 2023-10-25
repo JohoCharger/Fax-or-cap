@@ -7,6 +7,10 @@ textarea {
     resize: none;
 }
 
+a,span {
+    text-decoration: none!important;
+}
+
 #new-post-form {
     display: none;
 }

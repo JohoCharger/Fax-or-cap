@@ -1,5 +1,5 @@
 const express = require('express');
-const { GetTimeString } = require('./../Utils');
+const { getTimeString, getFaxOrCapString } = require('../Utils');
 
 const router = express.Router();
 
@@ -9,29 +9,12 @@ module.exports = (params) => {
     //feed route
     router.get("/", async (request, response) => {
         let profile = false;
-        let posts = [];
-        const session = await database.getSessionBySessionId(request.session.id);
-        if (session) {
-            posts = await database.getPostsAndVotesByAccount(session.account_id, 1);
-            posts.forEach(post => {
-                if (!post.vote_type) return;
-                post.vote_type = post.vote_type.readUInt8(0);
-            });
-            profile = await database.getAccountByGoogleId(session.account_id);
-        } else {
-            request.session.id = null;
-            posts = await database.getPosts(10);
-        }
-        const now = Date.now();
-        posts.forEach(post => {
-            const post_date = Date.parse(post.created_at);
-            const difference = now - post_date;
-            post.time_since = GetTimeString(String(difference));
-        });
-        let lastPost = 0
-        if (posts.length > 0) lastPost = posts[posts.length - 1].post_id;
 
-        return response.render("feed", { posts, profile, lastPost });
+        const session = await database.getSessionBySessionId(request.session.id);
+        if (session) profile = await database.getAccountByGoogleId(session.account_id);
+        else request.session.id = null;
+
+        return response.render("feed", { profile });
     });
 
     router.get('/new_content', async (request, response) => {
@@ -52,11 +35,15 @@ module.exports = (params) => {
         }
 
         const now = Date.now();
-        posts.forEach(post => {
-            const post_date = Date.parse(post.created_at);
+        for (let i = 0; i < posts.length; i++) {
+            const stats = await database.countVotes(posts[i].post_id);
+            posts[i].fax = stats.fax;
+            posts[i].cap = stats.cap;
+            posts[i].faxorcapString = getFaxOrCapString(posts[i]);
+            const post_date = Date.parse(posts[i].created_at);
             const difference = now - post_date;
-            post.time_since = GetTimeString(String(difference));
-        });
+            posts[i].time_since = getTimeString(String(difference));
+        }
 
         return response.json(posts);
     });
@@ -68,7 +55,7 @@ module.exports = (params) => {
 
         const amount = parseInt(request.query.amount) || 1;
         const lastPost = parseInt(request.query.last_post) || 0;
-        let posts = [];
+        let posts;
 
         if (session) {
             posts = await database.getAccountAndVotesPosts(session.account_id, account.google_id, amount, lastPost);
@@ -82,11 +69,15 @@ module.exports = (params) => {
         }
 
         const now = Date.now();
-        posts.forEach(post => {
-            const post_date = Date.parse(post.created_at);
+        for (let i = 0; i < posts.length; i++) {
+            const stats = await database.countVotes(posts[i].post_id);
+            posts[i].fax = stats.fax;
+            posts[i].cap = stats.cap;
+            posts[i].faxorcapString = getFaxOrCapString(posts[i]);
+            const post_date = Date.parse(posts[i].created_at);
             const difference = now - post_date;
-            post.time_since = GetTimeString(String(difference));
-        });
+            posts[i].time_since = getTimeString(String(difference));
+        }
 
         return response.json(posts);
     });

@@ -25,11 +25,17 @@ module.exports = (params) => {
 
         if (!session) return response.status(402).send('yo wtf');
         const post_id = request.body.post_id;
-        const account_id = request.session.id;
+        const post = await database.getPostByPostId(post_id);
 
-        await database.removePost(post_id);
-        return response.status(200).end();
+        if (post) {
+            if (post.account_id === session.account_id) {
+                await database.removePost(post_id);
+                return response.status(200).end();
+            }
+        }
+        return response.status(402).send('yo wtf');
     });
+
 
     return router;
 }

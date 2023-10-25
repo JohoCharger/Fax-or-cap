@@ -1,6 +1,9 @@
 const express = require('express');
 const jwtDecode = require("jwt-decode");
 const uuid = require("uuid");
+const random = require('random-integer');
+
+require('dotenv').config();
 
 const router = express.Router();
 
@@ -8,7 +11,7 @@ module.exports = (params) => {
     const database = params.database;
 
     router.get('/sign_in', (request, response) => {
-        response.render('signin');
+        response.render('signin', { authUri: process.env.AUTH_URI } );
     });
 
     router.post('/google', async (request, response) => {
@@ -23,11 +26,16 @@ module.exports = (params) => {
         let new_account = false;
         const account = await database.getAccountByGoogleId(account_id);
         if (!account) {
+            let username = '';
+            do {
+                username = credential.given_name + String(random(100000, 999999));
+            } while (await database.getAccountByUsername(username));
+
             const creds = {
                 google_id: account_id,
-                email: credential.email,
-                username: credential.given_name,
-                img_link: credential.picture
+                email: credential.email || 'No email?? how is this possible?',
+                username: username,
+                img_link: credential.picture || '/res/stock_profile_picture.png'
             }
             await database.createNewAccount(creds);
             request.session.new_account = true;
@@ -37,7 +45,7 @@ module.exports = (params) => {
         }
         const session_id = uuid.v4();
 
-        if (await database.getSessionByAccountId(account_id)){
+        if (await database.getSessionByAccountId(account_id)) {
             await database.updateSession(account_id, session_id);
         } else {
             await database.createNewSession(session_id, account_id);
@@ -71,8 +79,18 @@ module.exports = (params) => {
             if (request.session.new_account) {
                 const account = await database.getAccountByGoogleId(session.account_id);
                 request.session.new_account = false;
-                return response.render('new_user', { account });
+                return response.render('change_username', {account, newAccount: true});
             }
+        }
+        return response.redirect('/feed');
+    });
+
+    router.get('/change_username', async (request, response) => {
+        const session = await database.getSessionBySessionId(request.session.id);
+        if (session) {
+            const account = await database.getAccountByGoogleId(session.account_id);
+            request.session.new_account = false;
+            return response.render('change_username', {account, newAccount: false});
         }
         return response.redirect('/feed');
     });

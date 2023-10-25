@@ -28,7 +28,7 @@ function usernamePromptChanged() {
         });
     } else {
         const http = new XMLHttpRequest();
-        http.open("GET", `http://localhost:3000/auth/username_available?username=${newUsername}`);
+        http.open("GET", `/auth/username_available?username=${newUsername}`);
         http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         http.send();
 
@@ -54,13 +54,13 @@ function submitNewUsername() {
     if (!canSubmit) return;
     const newUsername = newUsernameInput.value;
     const http = new XMLHttpRequest();
-    http.open("POST", `http://localhost:3000/auth/change_username`);
+    http.open("POST", `/auth/change_username`);
     http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     http.send(JSON.stringify({ newUsername }));
 
     http.onreadystatechange = (event) => {
         if (http.readyState !== 4) return;
-        if (http.status === 200) window.location.replace('http://localhost:3000/feed');
+        if (http.status === 200) window.location.replace('/feed');
     }
 }
 
