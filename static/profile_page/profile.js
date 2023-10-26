@@ -10,6 +10,7 @@ const deletePostContent = document.getElementById('delete-post-content');
 const ownAccount = !!document.getElementById('own-account');
 const signoutButton = document.getElementById('signout_button');
 const loading = document.getElementById('loading');
+let postLoadingInProgress = false;
 
 if (ownAccount) {
     signoutButton.onclick = () => {
@@ -26,6 +27,8 @@ if (ownAccount) {
 }
 
 function requestNewPosts(amount) {
+    if (postLoadingInProgress) return;
+    postLoadingInProgress = true;
     const Http = new XMLHttpRequest()
     Http.open("GET", `/api/feed/new_content/${accountName}?amount=${amount}&last_post=${lastPost.textContent}`);
     Http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -33,6 +36,7 @@ function requestNewPosts(amount) {
 
     Http.onreadystatechange = (event) => {
         if (Http.readyState !== 4) return;
+        postLoadingInProgress = false;
         loading.style.display = "none";
         let posts = JSON.parse(Http.responseText);
         if (posts.length === 0) {
