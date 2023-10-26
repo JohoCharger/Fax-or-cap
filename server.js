@@ -6,6 +6,8 @@ const cookieSession = require('cookie-session');
 const cookieParser = require('cookie-parser');
 const routes = require("./routes/index");
 
+require('dotenv').config();
+
 const Database = require("./database");
 
 const app = express();
