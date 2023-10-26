@@ -74,7 +74,6 @@ function promptDeleteButton(event) {
     deletePostButton.onclick = () => {
         removePost(target, post_id)
     }
-    console.log(cancelDeletionButton)
     cancelDeletionButton.onclick = hidePostDeletionVerification;
 }
 

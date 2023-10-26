@@ -1,14 +1,14 @@
 function getFaxOrCapString(post) {
     if (post.fax === 0 && post.cap === 0) return 'no votes yet';
-    if (post.fax === 0 && post.cap !== 0) return '100% cap';
-    if (post.fax !== 0 && post.cap === 0) return '100% fax';
-    if (post.fax === post.cap) return "50% fax";
+    if (post.fax === 0 && post.cap !== 0) return '100% cap🧢';
+    if (post.fax !== 0 && post.cap === 0) return '100% fax💯';
+    if (post.fax === post.cap) return "50% fax💯";
 
     const total = post.fax + post.cap;
     if (post.fax > post.cap) {
-        return String(Math.round(post.fax / total * 100)) + '% fax'
+        return String(Math.round(post.fax / total * 100)) + '% fax💯'
     } else {
-        return String(Math.round(post.cap / total * 100)) + '% cap'
+        return String(Math.round(post.cap / total * 100)) + '% cap🧢'
     }
 }
 
@@ -35,6 +35,7 @@ function displayNewPost(post) {
     newPostElement.querySelector(".faxorcap").textContent = post.faxorcapString;
     newPostElement.querySelector(".fax-count").textContent = post.fax;
     newPostElement.querySelector(".cap-count").textContent = post.cap;
+    newPostElement.querySelector(".total-votes").textContent = 'votes: ' + post.total;
     newPostElement.querySelector(".fax-button").onclick = faxButtonPressed;
     newPostElement.querySelector(".cap-button").onclick = capButtonPressed;
 

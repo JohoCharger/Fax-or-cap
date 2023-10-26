@@ -29,6 +29,7 @@ module.exports = (params) => {
                 const stats = await database.countVotes(posts[i].post_id);
                 posts[i].fax = stats.fax;
                 posts[i].cap = stats.cap;
+                posts[i].total = stats.fax + stats.cap;
                 posts[i].faxorcapString = getFaxOrCapString(posts[i]);
                 const post_date = Date.parse(posts[i].created_at);
                 const difference = now - post_date;
@@ -67,6 +68,7 @@ module.exports = (params) => {
                 const stats = await database.countVotes(posts[i].post_id);
                 posts[i].fax = stats.fax;
                 posts[i].cap = stats.cap;
+                posts[i].total = stats.fax + stats.cap;
                 posts[i].faxorcapString = getFaxOrCapString(posts[i]);
                 const post_date = Date.parse(posts[i].created_at);
                 const difference = now - post_date;

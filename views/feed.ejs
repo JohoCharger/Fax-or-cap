@@ -63,11 +63,9 @@
                         <img class="profile-picture" src="<%= profile.img_link %>" alt="profile-picture">
                         <p class="author text-light d-inline fs-5"><%= profile.username %></p>
                     </div>
-                    <div class="m-md-3 m-2">
-                    </div>
-                    <div class="form-floating w-75 mx-auto my-3 d-md-block d-md-block">
+                    <div class=" w-75 mx-auto my-3 d-md-block">
                         <label class="d-none" for="input-textarea">fax or cap</label>
-                        <textarea class="form-control" placeholder="Leave fax or cap here"
+                        <textarea rows="3" class="form-control" placeholder="Leave fax or cap here"
                                   id="input-textarea"></textarea>
                     </div>
                     <button id="submit-post" class="btn btn-primary w-25">Submit</button>
@@ -109,7 +107,8 @@
                     <span class="post-id d-none"></span>
                     <span class="fax-count d-none"></span>
                     <span class="cap-count d-none"></span>
-                    <span class="card-text text-secondary faxorcap fs-5"></span>
+                    <span class="card-text text-light faxorcap fs-5"></span>
+                    <span class="card-text text-secondary total-votes fs-5"></span>
                 </h5>
                 <div class="card-text text-light fs-4">
                     <span class="content"></span>

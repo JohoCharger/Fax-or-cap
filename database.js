@@ -223,6 +223,13 @@ class Database {
         }
         return results;
     }
+    async countVotesTotal(post_id) {
+        const count = await this.connection.query(
+            "SELECT COUNT(*) as cnt FROM votes WHERE post_id = ?",
+            [post_id]
+        );
+        return count[0][0].cnt;
+    }
 }
 
 

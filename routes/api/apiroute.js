@@ -1,9 +1,9 @@
 const express = require('express');
 
-const PostApiRouter = require('./postapiroute');
-const VoteApiRouter = require('./voteapiroute');
-const AccountApiRouter = require('./accountapiroute');
-const FeedApiRouter = require('./feedapiroute');
+const PostApiRouter = require('./postapi');
+const VoteApiRouter = require('./voteapi');
+const AccountApiRouter = require('./accountapi');
+const FeedApiRouter = require('./feedapi');
 
 const router = express.Router();
 

@@ -11,6 +11,10 @@ module.exports = (params) => {
             const session = await database.getSessionBySessionId(request.session.id);
 
             if (session) {
+                const content = request.body.content;
+                if (content.trim() === '') return response.redirect("../")
+                if (content.length > 250) return response.redirect("../");
+
                 await database.createNewPost({
                     account_id: session.account_id,
                     content: request.body.content

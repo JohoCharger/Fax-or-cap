@@ -45,6 +45,10 @@ function toggleNewPostForm() {
 }
 
 function submitNewPost() {
+    const content = inputTextarea.value;
+    if (content.trim() === '') return;
+    if (content.length > 250) return;
+
     const http = new XMLHttpRequest();
     http.open("POST", '/api/post/create');
     http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -55,6 +59,12 @@ function submitNewPost() {
     http.onreadystatechange = (event) => {
         if (http.readyState !== 4) return;
         window.location = '/feed';
+    }
+}
+
+inputTextarea.oninput = function() {
+    if (inputTextarea.value.length > 250) {
+        inputTextarea.value = inputTextarea.value.slice(0, 250);
     }
 }
 
