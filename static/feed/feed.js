@@ -8,8 +8,11 @@ const signInFirst = document.getElementById("sign-in-first");
 const signedIn = document.getElementById("signed-in");
 const lastPost = document.getElementById("last-post");
 const loading = document.getElementById("loading");
+let postLoadingInProgress = false;
 
 function requestNewPosts(amount) {
+    if (postLoadingInProgress) return;
+    postLoadingInProgress = true;
     const Http = new XMLHttpRequest();
     Http.open("GET", `/api/feed/new_content?amount=${amount}&last_post=${lastPost.textContent}`);
     Http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -17,6 +20,7 @@ function requestNewPosts(amount) {
 
     Http.onreadystatechange = (event) => {
         if (Http.readyState !== 4) return;
+        postLoadingInProgress = false;
         loading.style.display = 'none';
         let posts = JSON.parse(Http.responseText);
         if (posts.length === 0) {
