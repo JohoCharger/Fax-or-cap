@@ -17,11 +17,15 @@ module.exports = (params) => {
             if (!request.body.type || !request.body.post_id) {
                 return response.status(404);
             }*/
+            let vote_type = parseInt(request.body.vote_type);
+            if (vote_type !== 0 && vote_type !== 1) {
+                return response.status(404).send('invalid vote type');
+            }
 
             await database.addVote({
                 post_id: request.body.post_id,
                 account_id: session.account_id,
-                vote_type: parseInt(request.body.vote_type)
+                vote_type: vote_type
             });
             return response.status(200).end();
         } catch (error) {

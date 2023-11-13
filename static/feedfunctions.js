@@ -12,6 +12,16 @@ function getFaxOrCapString(post) {
     }
 }
 
+function profanityFilter(content) {
+    //Strip whitespaces dots and dashes
+    content = content.replace(/[\s.-]+/g, '');
+    const regexes = [
+        /[nN]+[iIl|!17]+[gG@]+[aA@4e]+[sS5]?/,
+        /[nN]+[iIl|!17]+[gG@][eE38]+[rR45]+[sS5]?/,
+        /[nN]+[eE38]+[kK]+[eE38]+[rR45]+[iIl|!17]*/,
+    ];
+}
+
 function getTimeString(time) {
     time /= 60000;
     if (time < 1) return '1min';
@@ -80,6 +90,9 @@ function updateFaxOrCapString(target) {
         cap: parseInt(capAmountElement.textContent),
     });
 
+    const total = parseInt(faxAmountElement.textContent) + parseInt(capAmountElement.textContent);
+
+    target.parentNode.querySelector('.total-votes').textContent = 'votes: ' + String(total);
     faxorcapString.textContent = newFaxorcapString;
 }
 

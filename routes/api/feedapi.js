@@ -9,7 +9,8 @@ module.exports = (params) => {
     router.get('/new_content', async (request, response, next) => {
         try {
             const session = await database.getSessionBySessionId(request.session.id);
-            const amount = parseInt(request.query.amount) || 1;
+            let amount = parseInt(request.query.amount) || 1;
+            amount = amount < 0 || amount > 15 ? 0 : amount;
             const lastPost = parseInt(request.query.last_post) || 0;
             let posts = [];
 
@@ -48,7 +49,8 @@ module.exports = (params) => {
             const account = await database.getAccountByUsername(request.params.user);
             if (!account) return response.json([]);
 
-            const amount = parseInt(request.query.amount) || 1;
+            let amount = parseInt(request.query.amount) || 1;
+            amount = amount < 0 || amount > 15 ? 0 : amount;
             const lastPost = parseInt(request.query.last_post) || 0;
             let posts;
 
