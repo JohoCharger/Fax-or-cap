@@ -17,7 +17,7 @@ module.exports = (params) => {
 
                 await database.createNewPost({
                     account_id: session.account_id,
-                    content: request.body.content
+                    content: request.body.content.replace(/\p{M}/gu, '')
                 });
                 return response.redirect("../");
             }
