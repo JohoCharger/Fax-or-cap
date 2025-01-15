@@ -4,7 +4,9 @@
   "description": "fax or cap?",
   "main": "server.js",
   "scripts": {
-    "run": "nodemon --ignore static/ server.js"
+    "run": "nodemon --ignore static/ server.js",
+    "production": "pm2 start server.js --name faxorcap",
+    "restart": "pm2 restart faxorcap"
   },
   "author": "Joonas",
   "license": "ISC",
