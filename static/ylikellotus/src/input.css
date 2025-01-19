@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: 'Airstrike';
+    src: url('../res/airstrike/airstrike.ttf') format('truetype');
+    font-weight: 400; /* Adjust as needed */
+    font-style: normal;
+}
+
+.ufo-sky {
+    background-image: url('../res/ufosky/sky.png');
+    background-size: cover;
+    background-position: center;
+    pointer-events: none;
+}
+
+.ufo-sky-lower {
+    background-image: url('../res/ufosky/ufosky_lower_sky.png');
+    background-size: cover;
+    background-position: center;
+    pointer-events: none;
+}
+
+.ufo-sky-upper {
+    background-image: url('../res/ufosky/sky_upper.png');
+    background-size: cover;
+    background-position: center;
+    pointer-events: none;
+}
+
+.ufo {
+    background-image: url('../res/ufosky/ufosky_ufo.png');
+    background-size: cover;
+    background-position: center;
+    pointer-events: none;
+}
+
+.ufo-sky-lower-upscreen {
+    background-image: url('../res/ufosky/ufosky_lower_sky_flip.png');
+    background-size: cover;
+    background-position: center;
+    pointer-events: none;
+    transform: scaleY(-1);
+}
+
+.party-image {
+    box-shadow: 0 -20px 20px -20px rgba(0, 0, 0, 0.2); /* Shadow at the top */
+    border-top: 10px solid #f4f4f4; /* Light border */
+    border-bottom: 10px solid #f4f4f4; /* Light border */
+}

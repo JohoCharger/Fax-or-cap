@@ -22,7 +22,7 @@ app.use(helmet({
     referrerPolicy: { policy: 'no-referrer-when-downgrade' },
     contentSecurityPolicy: {
         directives: {
-            'script-src': ["'self'", 'https://accounts.google.com/gsi/client'],
+            'script-src': ["'self'", 'https://accounts.google.com/gsi/client', "https://cdnjs.cloudflare.com"],
             'img-src': ["'self'", 'https://lh3.googleusercontent.com/']
         }
     }

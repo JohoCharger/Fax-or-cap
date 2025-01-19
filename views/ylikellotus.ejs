@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="/ylikellotus/src/styles.css">
+	<title>Ylikellotus</title>
+</head>
+
+<body>
+	<div>
+		<div class="ufo-sky fixed h-screen w-svw -z-50"></div>
+		<div class="ufo-sky-lower fixed h-screen w-svw z-10"></div>
+		<div class="ufo-sky-upper fixed h-screen w-svw -z-10"></div>
+		<div class="ufo fixed h-screen w-svw -z-30"></div>
+	</div>
+	<main class="">
+		<div class="ufo-sky-lower-upscreen fixed h-screen w-svw z-10"></div>
+		<section class="flex flex-col h-screen justify-center items-center z-50">
+			<h1 class="font-airstrike text-white text-5xl font-bold lg:text-7xl 2xl:text-9xl z-100">ylikellotus</h1>
+			<h1
+					class="font-airstrike text-white text-2xl font-bold lg:text-4xl 2xl:text-7xl z-20">27.2
+				Tilassa x</h1>
+			<div>
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+					 stroke="currentColor" class="size-16 down-arrow">
+					<path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+				</svg>
+			</div>
+
+		</section>
+		<section>
+			<div class="flex flex-col justify-center items-center w-screen font-airstrike min-h-screen">
+				<div class="flex flex-row items-center justify-center w-3/4 pt-14">
+					<div class="basis-1/2">
+						<h2 class="text-white text-3xl md:text-6xl font-airstrike">Mikä ja mitä?</h2>
+						<div class="bg-purple-900 border border-r-2 rounded-2xl p-5 text-2xl font-airstrike">
+							<p class="text-white text-md md:text-xl">Vuoden hulluimmat kekkerit</p>
+						</div>
+					</div>
+					<div class="basis-1/2"></div>
+				</div>
+				<div class="flex flex-row items-center justify-center w-3/4 pt-14">
+					<div class="basis-1/4"></div>
+					<div class="basis-1/2 ">
+						<h2 class="text-white text-3xl md:text-6xl font-airstrike">Missä ja milloin?</h2>
+						<div class="bg-purple-900 border border-r-2 rounded-2xl p-5 text-2xl font-airstrike">
+							<p class="text-white text-md md:text-xl">Se kyltereiden tila, tais olla 27.2</p>
+						</div>
+					</div>
+					<div class="basis-1/4"></div>
+				</div>
+				<div class="flex flex-row items-center justify-center w-3/4 pt-14 pb-14">
+					<div class="basis-1/2"></div>
+					<div class="basis-1/2 ">
+						<h2 class="text-white text-3xl md:text-6xl font-airstrike">Teema?</h2>
+						<div class="bg-purple-900 border border-r-2 rounded-2xl p-5 text-2xl font-airstrike">
+							<p class="text-white text-md md:text-xl">Scifi! Tähän vielä jotain tekstiä.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section
+				class="hero min-h-screen -z-20 relative party-image"
+				style="background-image: url(/ylikellotus/res/party2.jpg);">
+			<div class="hero-overlay bg-opacity-60"></div>
+			<div class="hero-content text-neutral-content text-center">
+				<div class="max-w-md">
+					<h1 class="mb-5 text-5xl font-airstrike">Mekään emme malta odottaa!</h1>
+					<p class="mb-5">
+					<div class="flex gap-10">
+						<div>
+							<span class="countdown font-mono text-4xl">
+								<span style="--value:15;" id="days"></span>
+							</span>days
+						</div>
+						<div>
+							<span class="countdown font-mono text-4xl">
+								<span style="--value:10;" id="hours"></span>
+							</span>hours
+						</div>
+						<div>
+							<span class="countdown font-mono text-4xl">
+								<span style="--value:24;" id="minutes"></span>
+							</span>min
+						</div>
+						<div>
+							<span class="countdown font-mono text-4xl">
+								<span style="--value:0;" id="seconds"></span>
+							</span>sec
+						</div>
+					</div>
+					<button class="btn btn-primary mt-5">Osta liput</button>
+				</div>
+			</div>
+		</section>
+		<section class="">
+			<div class="flex flex-col justify-center items-center h-screen">
+				<h2 class="text-2xl md:text-5xl xl:text-7xl font-airstrike text-white">Liity tiedotuskanaville</h2>
+				<div class="flex flex-row justify-center items-center">
+					<svg class="w-8 h-8 lg:w-16 lg:h-16 me-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+					 	<path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/>
+					</svg>
+					<svg class="w-8 h-8 lg:w-16 lg:h-16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
+						<path d="M248 8C111 8 0 119 0 256S111 504 248 504 496 393 496 256 385 8 248 8zM363 176.7c-3.7 39.2-19.9 134.4-28.1 178.3-3.5 18.6-10.3 24.8-16.9 25.4-14.4 1.3-25.3-9.5-39.3-18.7-21.8-14.3-34.2-23.2-55.3-37.2-24.5-16.1-8.6-25 5.3-39.5 3.7-3.8 67.1-61.5 68.3-66.7 .2-.7 .3-3.1-1.2-4.4s-3.6-.8-5.1-.5q-3.3 .7-104.6 69.1-14.8 10.2-26.9 9.9c-8.9-.2-25.9-5-38.6-9.1-15.5-5-27.9-7.7-26.8-16.3q.8-6.7 18.5-13.7 108.4-47.2 144.6-62.3c68.9-28.6 83.2-33.6 92.5-33.8 2.1 0 6.6 .5 9.6 2.9a10.5 10.5 0 0 1 3.5 6.7A43.8 43.8 0 0 1 363 176.7z"/>
+					</svg>
+
+				</div>
+
+			</div>
+		</section>
+	</main>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+	<script src="/ylikellotus/src/index.js"></script>
+</body>
+
+</html>

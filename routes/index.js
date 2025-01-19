@@ -14,6 +14,10 @@ module.exports = (params) => {
        return response.redirect('/feed');
     });
 
+    router.get('/ylikellotus', (request, response) => {
+        return response.render('ylikellotus');
+    });
+
     router.get("/feed", async (request, response, next) => {
         try {
             let profile = false;
